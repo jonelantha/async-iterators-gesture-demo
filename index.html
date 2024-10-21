@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <link rel="stylesheet" href="./index.css" />
+    <title>async-iterators-gesture-demo</title>
+  </head>
+  <body>
+    <dialog id="introModal">
+      <form method="dialog">
+        <header>
+          <h1>Gestures using async iterators</h1>
+          <p>
+            <a
+              href="https://github.com/jonelantha/async-iterators-gesture-demo"
+              class="external"
+              >Source on GitHub</a
+            >
+          </p>
+        </header>
+        <main>
+          <p>Explore the image using:</p>
+          <ul>
+            <li>Touch gestures</li>
+            <li>Mouse & wheel</li>
+            <li>Keyboard: ↑ ↓ ← → ＋ −</li>
+          </ul>
+          <button autofocus>OK, understood!</button>
+        </main>
+      </form>
+    </dialog>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      const dialog = document.getElementById("introModal");
+
+      dialog.addEventListener("close", () => {
+        document.getElementById("container")?.focus();
+      });
+
+      dialog.showModal();
+    </script>
+  </body>
+</html>

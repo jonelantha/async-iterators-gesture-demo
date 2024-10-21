@@ -1,0 +1,131 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+#introModal {
+  --highlight: #7abfff;
+  --highlight-hover: #cccccc;
+  --dark: #1f1f1f;
+  --light: #cccccc;
+
+  @media (width < 500px) {
+    font-size: 0.9rem;
+  }
+
+  padding-block: 1.5em;
+  padding-inline: 1.5em;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol";
+
+  background-color: var(--dark);
+  border-radius: 16px;
+  border: none;
+  box-shadow: 20px 20px 20px 0 rgba(0, 0, 0, 0.5);
+
+  &::backdrop {
+    background-color: transparent;
+  }
+
+  color: var(--light);
+
+  header {
+    border-block-end: 1px solid var(--light);
+    padding-block-end: 0.5em;
+
+    h1 {
+      margin-block-start: 0;
+      font-family:
+        "Trebuchet MS",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Helvetica,
+        Arial,
+        sans-serif,
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        "Segoe UI Symbol";
+      font-size: 1.5em;
+      font-weight: normal;
+    }
+  }
+
+  main {
+    padding-block-start: 0.5em;
+  }
+
+  p {
+    font-size: 1em;
+  }
+
+  ul {
+    list-style: inputs;
+    list-style-position: inside;
+    padding-inline-start: 0;
+    margin-block: 1.5em;
+
+    li {
+      margin-inline-start: 0;
+      margin-block: 0.5em;
+
+      &::marker {
+        font-size: 1.25em;
+      }
+    }
+  }
+
+  a,
+  a:visited {
+    color: var(--highlight);
+    &.external::after {
+      content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%237abfff" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg>');
+      display: inline-block;
+      margin-left: 0.4em;
+      width: 0.8em;
+      height: 0.8em;
+    }
+  }
+
+  button {
+    color: var(--dark);
+    font-family: inherit;
+    display: block;
+    margin-inline: auto;
+    margin-block-start: 1.5em;
+    font-size: 1rem;
+    border-radius: 20px;
+    border: none;
+    background-color: var(--highlight);
+    padding: 0.75em;
+
+    &:hover {
+      background-color: var(--highlight-hover);
+      cursor: pointer;
+    }
+  }
+}
+
+@counter-style inputs {
+  system: cyclic;
+  symbols: "🤏" "🐁" "⌨️";
+  suffix: "\00a0\00a0\00a0";
+}
+
+:focus-visible {
+  outline-width: 2px;
+  outline-style: solid;
+}
