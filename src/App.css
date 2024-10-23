@@ -1,0 +1,17 @@
+#container {
+  height: 100dvh;
+  width: 100%;
+  background-color: black;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+
+  img {
+    content: url(./assets/sample-landscape.jpeg);
+    @media (max-aspect-ratio: 1/1) {
+      content: url(./assets/sample-portrait.jpeg);
+    }
+
+    height: 100%;
+  }
+}
