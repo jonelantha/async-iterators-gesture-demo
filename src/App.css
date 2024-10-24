@@ -6,6 +6,8 @@
   display: flex;
   justify-content: center;
 
+  touch-action: none;
+
   img {
     content: url(./assets/sample-landscape.jpeg);
     @media (max-aspect-ratio: 1/1) {
