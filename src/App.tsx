@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAsyncIterator } from "./util/useAsyncIterator";
 import { inputEvents } from "./inputEvents";
-import { applyPan, getPointer } from "./navCycle";
+import { navCycle } from "./navCycle";
 
 import "./App.css";
 
@@ -10,36 +10,7 @@ function App() {
 
   const transform = useAsyncIterator(
     async function* transforms(signal) {
-      const events = inputEvents(container);
-
-      let transform = new DOMMatrix();
-
-      let currentPointer: Pointer | undefined;
-
-      for await (const event of events) {
-        if (currentPointer === undefined) {
-          if (event.type === "pointerdown") {
-            currentPointer = getPointer(event);
-          }
-        } else {
-          // currentPointer !== undefined
-          if (event.pointerId === currentPointer.id) {
-            if (event.type === "pointermove") {
-              const oldPointer = currentPointer;
-
-              currentPointer = getPointer(event);
-
-              transform = applyPan(transform, currentPointer, oldPointer);
-
-              yield transform;
-            }
-
-            if (event.type === "pointerup" || event.type === "pointercancel") {
-              currentPointer = undefined;
-            }
-          }
-        }
-      }
+      yield* navCycle(inputEvents(container));
     },
     [container],
   );
