@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAsyncIterator } from "./util/useAsyncIterator";
-import { getEvents } from "./util/getEvents";
+import { inputEvents } from "./inputEvents";
 
 import "./App.css";
 
@@ -9,12 +9,7 @@ function App() {
 
   const transform = useAsyncIterator(
     async function* transforms(signal) {
-      const events = getEvents(container, [
-        "pointermove",
-        "pointerdown",
-        "pointerup",
-        "pointercancel",
-      ]);
+      const events = inputEvents(container);
 
       let transform = new DOMMatrix();
 
@@ -22,11 +17,7 @@ function App() {
 
       for await (const event of events) {
         if (currentPointer === undefined) {
-          if (event.type === "pointerdown" && event.button === 0) {
-            event.preventDefault();
-
-            container!.setPointerCapture(event.pointerId);
-
+          if (event.type === "pointerdown") {
             currentPointer = { id: event.pointerId, x: event.x, y: event.y };
           }
         } else {
