@@ -39,6 +39,49 @@ export async function* navCycle(
             return transform;
           }
           break;
+
+        case "pointerdown":
+          if (event.pointerId !== currentPointer.id) {
+            const newPointer = getPointer(event);
+
+            return yield* pinchPhase(transform, [currentPointer, newPointer]);
+          }
+          break;
+      }
+    }
+  }
+
+  async function* pinchPhase(
+    transform: DOMMatrix,
+    currentPointers: [Pointer, Pointer],
+  ): Phase {
+    for await (const event of events) {
+      switch (event.type) {
+        case "pointermove": {
+          const oldPointers = currentPointers;
+
+          if (event.pointerId === currentPointers[0].id) {
+            currentPointers = [getPointer(event), currentPointers[1]];
+          } else if (event.pointerId === currentPointers[1].id) {
+            currentPointers = [currentPointers[0], getPointer(event)];
+          }
+
+          if (currentPointers !== oldPointers) {
+            transform = applyPinch(transform, currentPointers, oldPointers);
+
+            yield transform;
+          }
+          break;
+        }
+
+        case "pointerup":
+        case "pointercancel":
+          if (event.pointerId === currentPointers[0].id) {
+            return yield* panPhase(transform, currentPointers[1]);
+          } else if (event.pointerId === currentPointers[1].id) {
+            return yield* panPhase(transform, currentPointers[0]);
+          }
+          break;
       }
     }
   }
@@ -57,6 +100,33 @@ function applyPan(
     .translate(currentPoint.x, currentPoint.y)
     .translate(-previousPoint.x, -previousPoint.y)
     .multiply(transform);
+}
+
+function applyPinch(
+  transform: DOMMatrix,
+  currentPoints: [Point, Point],
+  previousPoints: [Point, Point],
+) {
+  const previousMidPoint = midPoint(...previousPoints);
+  const currentMidPoint = midPoint(...currentPoints);
+
+  return new DOMMatrix()
+    .translate(currentMidPoint.x, currentMidPoint.y)
+    .scale(distanceBetween(...currentPoints))
+    .scale(1 / distanceBetween(...previousPoints))
+    .translate(-previousMidPoint.x, -previousMidPoint.y)
+    .multiply(transform);
+}
+
+function distanceBetween({ x: x0, y: y0 }: Point, { x: x1, y: y1 }: Point) {
+  const deltaX = x0 - x1;
+  const deltaY = y0 - y1;
+
+  return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+}
+
+function midPoint({ x: x0, y: y0 }: Point, { x: x1, y: y1 }: Point): Point {
+  return { x: x0 + (x1 - x0) / 2, y: y0 + (y1 - y0) / 2 };
 }
 
 function getPointer(pointerEvent: PointerEvent): Pointer {
