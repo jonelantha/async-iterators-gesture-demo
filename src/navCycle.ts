@@ -51,9 +51,14 @@ export async function* navCycle(
           break;
 
         case "pointerup":
-        case "pointercancel":
           if (event.pointerId === currentPointer.id) {
             return transform;
+          }
+          break;
+
+        case "pointercancel":
+          if (event.pointerId === currentPointer.id) {
+            throw new Error("pointercancel");
           }
           break;
 
