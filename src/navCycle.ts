@@ -16,7 +16,7 @@ export async function* navCycle(
           const transformFromKeyEvent = applyKeyEvent(transform, event);
 
           if (transformFromKeyEvent) {
-            yield transformFromKeyEvent;
+            yield { transform: transformFromKeyEvent, animate: true };
 
             return transformFromKeyEvent;
           }
@@ -40,7 +40,7 @@ export async function* navCycle(
 
             transform = applyPan(transform, currentPointer, oldPointer);
 
-            yield transform;
+            yield { transform };
           }
           break;
 
@@ -80,7 +80,7 @@ export async function* navCycle(
           if (currentPointers !== oldPointers) {
             transform = applyPinch(transform, currentPointers, oldPointers);
 
-            yield transform;
+            yield { transform };
           }
           break;
         }
@@ -97,7 +97,10 @@ export async function* navCycle(
     }
   }
 
-  type Phase = AsyncIterable<DOMMatrix, DOMMatrix | undefined>;
+  type Phase = AsyncIterable<
+    { transform: DOMMatrix; animate?: boolean },
+    DOMMatrix | undefined
+  >;
 }
 
 // helpers

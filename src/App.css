@@ -15,5 +15,11 @@
     }
 
     height: 100%;
+
+    transition: none;
+
+    &.animate {
+      transition: transform 200ms ease-out;
+    }
   }
 }

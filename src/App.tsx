@@ -8,8 +8,8 @@ import "./App.css";
 function App() {
   const [container, setContainer] = useState<HTMLElement | null>(null);
 
-  const transform = useAsyncIterator(
-    async function* transforms(signal) {
+  const imgState = useAsyncIterator(
+    async function* imgStates(signal) {
       let baseTransform = new DOMMatrix();
 
       while (!signal.aborted) {
@@ -21,7 +21,10 @@ function App() {
 
   return (
     <div id="container" ref={setContainer} tabIndex={0}>
-      <img style={{ transform: transform?.toString() }} />
+      <img
+        className={imgState?.animate ? "animate" : ""}
+        style={{ transform: imgState?.transform.toString() }}
+      />
     </div>
   );
 }
