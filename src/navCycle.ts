@@ -1,6 +1,6 @@
 export async function* navCycle(
   baseTransform: DOMMatrix,
-  events: AsyncIterable<PointerEvent>,
+  events: AsyncIterable<PointerEvent | KeyboardEvent>,
 ) {
   return (yield* initialPhase(baseTransform)) ?? baseTransform;
 
@@ -11,6 +11,17 @@ export async function* navCycle(
       switch (event.type) {
         case "pointerdown":
           return yield* panPhase(transform, getPointer(event));
+
+        case "keydown": {
+          const transformFromKeyEvent = applyKeyEvent(transform, event);
+
+          if (transformFromKeyEvent) {
+            yield transformFromKeyEvent;
+
+            return transformFromKeyEvent;
+          }
+          break;
+        }
       }
     }
   }
@@ -90,6 +101,28 @@ export async function* navCycle(
 }
 
 // helpers
+
+function applyKeyEvent(transform: DOMMatrix, event: KeyboardEvent) {
+  switch (event.key) {
+    case "ArrowRight":
+      return new DOMMatrix().translate(100, 0).multiply(transform);
+
+    case "ArrowLeft":
+      return new DOMMatrix().translate(-100, 0).multiply(transform);
+
+    case "ArrowUp":
+      return new DOMMatrix().translate(0, -100).multiply(transform);
+
+    case "ArrowDown":
+      return new DOMMatrix().translate(0, 100).multiply(transform);
+
+    case "+":
+      return new DOMMatrix().scale(2).multiply(transform);
+
+    case "-":
+      return new DOMMatrix().scale(0.5).multiply(transform);
+  }
+}
 
 function applyPan(
   transform: DOMMatrix,

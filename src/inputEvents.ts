@@ -8,6 +8,7 @@ export async function* inputEvents(element: HTMLElement | null) {
     "pointerdown",
     "pointerup",
     "pointercancel",
+    "keydown",
   ]);
 
   const elementCenter = getCenter(element);
@@ -19,6 +20,8 @@ export async function* inputEvents(element: HTMLElement | null) {
           event.preventDefault();
 
           element.setPointerCapture(event.pointerId);
+
+          element.focus();
 
           yield offsettedPointerEvent(event, elementCenter);
         }

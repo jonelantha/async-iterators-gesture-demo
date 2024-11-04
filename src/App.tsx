@@ -20,7 +20,7 @@ function App() {
   );
 
   return (
-    <div id="container" ref={setContainer}>
+    <div id="container" ref={setContainer} tabIndex={0}>
       <img style={{ transform: transform?.toString() }} />
     </div>
   );
