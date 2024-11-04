@@ -2,7 +2,13 @@ export async function* navCycle(
   baseTransform: DOMMatrix,
   events: AsyncIterable<PointerEvent | KeyboardEvent>,
 ) {
-  return (yield* initialPhase(baseTransform)) ?? baseTransform;
+  try {
+    return (yield* initialPhase(baseTransform)) ?? baseTransform;
+  } catch {
+    yield { transform: baseTransform, animate: true };
+
+    return baseTransform;
+  }
 
   // phases
 
@@ -58,6 +64,12 @@ export async function* navCycle(
             return yield* pinchPhase(transform, [currentPointer, newPointer]);
           }
           break;
+
+        case "keydown":
+          if (event.key === "Escape") {
+            throw new Error("escape");
+          }
+          break;
       }
     }
   }
@@ -91,6 +103,12 @@ export async function* navCycle(
             return yield* panPhase(transform, currentPointers[1]);
           } else if (event.pointerId === currentPointers[1].id) {
             return yield* panPhase(transform, currentPointers[0]);
+          }
+          break;
+
+        case "keydown":
+          if (event.key === "Escape") {
+            throw new Error("escape");
           }
           break;
       }
