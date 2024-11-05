@@ -9,6 +9,7 @@ export async function* inputEvents(element: HTMLElement | null) {
     "pointerup",
     "pointercancel",
     "keydown",
+    "wheel",
   ]);
 
   const elementCenter = getCenter(element);
@@ -31,6 +32,13 @@ export async function* inputEvents(element: HTMLElement | null) {
       case "pointerup":
       case "pointercancel":
         yield offsettedPointerEvent(event, elementCenter);
+
+        break;
+
+      case "wheel":
+        event.preventDefault();
+
+        yield event;
 
         break;
 

@@ -1,6 +1,6 @@
 export async function* navCycle(
   baseTransform: DOMMatrix,
-  events: AsyncIterable<PointerEvent | KeyboardEvent>,
+  events: AsyncIterable<PointerEvent | KeyboardEvent | WheelEvent>,
 ) {
   try {
     return (yield* initialPhase(baseTransform)) ?? baseTransform;
@@ -27,6 +27,14 @@ export async function* navCycle(
             return transformFromKeyEvent;
           }
           break;
+        }
+
+        case "wheel": {
+          transform = applyWheelEvent(transform, event);
+
+          yield { transform };
+
+          return transform;
         }
       }
     }
@@ -68,6 +76,13 @@ export async function* navCycle(
 
             return yield* pinchPhase(transform, [currentPointer, newPointer]);
           }
+          break;
+
+        case "wheel":
+          transform = applyWheelEvent(transform, event);
+
+          yield { transform };
+
           break;
 
         case "keydown":
@@ -174,6 +189,12 @@ function applyPinch(
     .scale(distanceBetween(...currentPoints))
     .scale(1 / distanceBetween(...previousPoints))
     .translate(-previousMidPoint.x, -previousMidPoint.y)
+    .multiply(transform);
+}
+
+function applyWheelEvent(transform: DOMMatrix, wheelEvent: WheelEvent) {
+  return new DOMMatrix()
+    .scale(1 - wheelEvent.deltaY * 0.01)
     .multiply(transform);
 }
 
