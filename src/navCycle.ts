@@ -1,7 +1,8 @@
 export async function* navCycle(
+  baseTransform: DOMMatrix,
   events: AsyncIterable<PointerEvent>,
 ) {
-  yield* initialPhase(new DOMMatrix());
+  return (yield* initialPhase(baseTransform)) ?? baseTransform;
 
   // phases
 
@@ -35,14 +36,14 @@ export async function* navCycle(
         case "pointerup":
         case "pointercancel":
           if (event.pointerId === currentPointer.id) {
-            return yield* initialPhase(transform);
+            return transform;
           }
           break;
       }
     }
   }
 
-  type Phase = AsyncIterable<DOMMatrix>;
+  type Phase = AsyncIterable<DOMMatrix, DOMMatrix | undefined>;
 }
 
 // helpers

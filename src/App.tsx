@@ -10,7 +10,11 @@ function App() {
 
   const transform = useAsyncIterator(
     async function* transforms(signal) {
-      yield* navCycle(inputEvents(container));
+      let baseTransform = new DOMMatrix();
+
+      while (!signal.aborted) {
+        baseTransform = yield* navCycle(baseTransform, inputEvents(container));
+      }
     },
     [container],
   );
