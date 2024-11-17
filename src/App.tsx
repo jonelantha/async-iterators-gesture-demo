@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAsyncIterator } from "./util/useAsyncIterator";
 import { inputEvents } from "./inputEvents";
+import { applyPan } from "./navCycle";
 
 import "./App.css";
 
@@ -28,10 +29,7 @@ function App() {
 
               currentPointer = { id: event.pointerId, x: event.x, y: event.y };
 
-              transform = transform.translate(
-                currentPointer.x - oldPointer.x,
-                currentPointer.y - oldPointer.y,
-              );
+              transform = applyPan(transform, currentPointer, oldPointer);
 
               yield transform;
             }
