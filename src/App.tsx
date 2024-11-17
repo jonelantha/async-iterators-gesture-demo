@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAsyncIterator } from "./util/useAsyncIterator";
 import { inputEvents } from "./inputEvents";
-import { applyPan } from "./navCycle";
+import { applyPan, getPointer } from "./navCycle";
 
 import "./App.css";
 
@@ -19,7 +19,7 @@ function App() {
       for await (const event of events) {
         if (currentPointer === undefined) {
           if (event.type === "pointerdown") {
-            currentPointer = { id: event.pointerId, x: event.x, y: event.y };
+            currentPointer = getPointer(event);
           }
         } else {
           // currentPointer !== undefined
@@ -27,7 +27,7 @@ function App() {
             if (event.type === "pointermove") {
               const oldPointer = currentPointer;
 
-              currentPointer = { id: event.pointerId, x: event.x, y: event.y };
+              currentPointer = getPointer(event);
 
               transform = applyPan(transform, currentPointer, oldPointer);
 

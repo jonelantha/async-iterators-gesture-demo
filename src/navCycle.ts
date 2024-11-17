@@ -10,3 +10,7 @@ export function applyPan(
     .translate(-previousPoint.x, -previousPoint.y)
     .multiply(transform);
 }
+
+export function getPointer(pointerEvent: PointerEvent): Pointer {
+  return { x: pointerEvent.x, y: pointerEvent.y, id: pointerEvent.pointerId };
+}
