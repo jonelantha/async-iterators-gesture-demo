@@ -47,7 +47,7 @@ export async function* navCycle(
 
 // helpers
 
-export function applyPan(
+function applyPan(
   transform: DOMMatrix,
   currentPoint: Point,
   previousPoint: Point,
@@ -58,6 +58,6 @@ export function applyPan(
     .multiply(transform);
 }
 
-export function getPointer(pointerEvent: PointerEvent): Pointer {
+function getPointer(pointerEvent: PointerEvent): Pointer {
   return { x: pointerEvent.x, y: pointerEvent.y, id: pointerEvent.pointerId };
 }
